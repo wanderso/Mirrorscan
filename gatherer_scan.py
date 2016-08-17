@@ -34,9 +34,38 @@ def scrape_soi():
 
 
 def convert_data(html_soup):
-    print(html_soup)
+    #print(html_soup)
+
+    print ""
     card_name = html_soup.find('img')['alt']
     print card_name
+
+    type_line = html_soup.find('span','typeLine').text
+    card_types = " ".join(type_line.split())
+    print card_types
+
+    mana_line = html_soup.find('span','manaCost')
+    #print mana_cost
+    mana_cost = ""
+    for entry in mana_line.find_all('img'):
+        mana_cost = mana_cost + " " + entry['alt']
+    mana_cost = mana_cost.strip()
+    print mana_cost
+
+    rules_div = html_soup.find('div','rulesText')
+#    print rules_div
+    for entry in rules_div.find_all('p'):
+        print entry.text
+
+    set_line = ""
+    for entry in html_soup.find_all('img'):
+#        print entry['src']
+        if "rarity=" in entry['src']:
+            set_line = entry
+    print set_line['alt']
+    print ""
+
+
 
 with open("soi.txt", "r") as f:
     text = f.read()
@@ -45,10 +74,11 @@ with open("soi.txt", "r") as f:
 
     main_tr = soup.find('tr')
 
-    convert_data(main_tr.find('tr'))
+    print(main_tr.find('tr'))
 
-#    for i in main_tr.find_all('tr'):
-#        print (i)
+    for i in main_tr.find_all('tr'):
+        convert_data(i)
+
 
 
 #print(soup.find_all('tr'))
